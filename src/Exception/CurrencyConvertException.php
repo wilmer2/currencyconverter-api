@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Service;
+namespace App\Exception;
 
 use App\Dto\CurrencyResponseErrorDto;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
-class CurrencyConvertErrorService {
+class CurrencyConvertException extends HttpException {
 
-    public function handleError(CurrencyResponseErrorDto $currencyResponseErrorDto)
-    {   
+    public function __construct(CurrencyResponseErrorDto $currencyResponseErrorDto)
+    {
         $defaultMessage = 'Internal server error. Please check the system logs for details.';
         $code = $this->generateExceptionCode($currencyResponseErrorDto->getCode());
         $info = $currencyResponseErrorDto->getInfo() ?? $defaultMessage;
 
-        throw new HttpException($code , $info);
+        parent::__construct($code, $info);
     }
 
     private  function generateExceptionCode($code)

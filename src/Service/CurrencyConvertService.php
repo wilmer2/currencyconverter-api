@@ -8,26 +8,18 @@ use App\Adapter\CurrencyConvertAdapter;
 use App\Adapter\SerializeAdapter;
 use App\Dto\CurrencyResponseDto;
 use App\Dto\CurrencyResponseErrorDto;
-
-use Symfony\Component\HttpKernel\Exception\HttpException;
-
+use App\Exception\CurrencyConvertException;
 
 class CurrencyConvertService
 {   
     private $client;
     private $serializer;
-    private $currencyErrorService;
     
     
-    public function __construct(
-        CurrencyConvertAdapter $client, 
-        SerializeAdapter $serializer,
-        CurrencyConvertErrorService $currencyErrorService
-    ) 
+    public function __construct(CurrencyConvertAdapter $client, SerializeAdapter $serializer) 
     {   
         $this->client = $client;
         $this->serializer = $serializer;
-        $this->currencyErrorService = $currencyErrorService;
     }
 
     public function getCurrencies()
@@ -37,7 +29,7 @@ class CurrencyConvertService
 
         if (!$jsonResponse->success) {
             $currencyErrorDto = $this->serializer->deserializeJson($response, CurrencyResponseErrorDto::class);
-            $this->currencyErrorService->handleError($currencyErrorDto);
+            throw new CurrencyConvertException($currencyErrorDto);
         } 
         
         $currencyResponseDto = $this->serializer->deserializeJson($response, CurrencyResponseDto::class);

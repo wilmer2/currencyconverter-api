@@ -28,4 +28,21 @@ class CurrencyConvertAdapter
 
         return $response->getContent();
     }
+
+    public function getConvert($from, $to, $amount)
+    {
+        $response = $this->client->request(
+            'GET',
+            'convert',
+            [
+                'query' => [
+                    'from' => $from,
+                    'to' => $to,
+                    'amount' => $amount,
+                ]
+            ]
+        );
+
+        return $response->getContent();
+    }
 }

@@ -22,7 +22,7 @@ class CurrencyConvertService
         $this->serializer = $serializer;
     }
 
-    public function getCurrencies()
+    public function getCurrencyResponse(): CurrencyResponseDto
     {   
         $response = $this->client->getCurrencies();
         $jsonResponse = json_decode($response);
@@ -30,8 +30,10 @@ class CurrencyConvertService
         if (!$jsonResponse->success) {
             $currencyErrorDto = $this->serializer->deserializeJson($response, CurrencyResponseErrorDto::class);
             throw new CurrencyConvertException($currencyErrorDto);
-        } 
-        
+        }
+
+     
+
         $currencyResponseDto = $this->serializer->deserializeJson($response, CurrencyResponseDto::class);
         
         return $currencyResponseDto;

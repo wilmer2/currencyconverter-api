@@ -8,14 +8,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\CurrencyConvertService;
 use App\Dto\CurrencyConvertRequestDto;
+use App\Dto\GuestIdRequestDto;
+use App\Service\GuestService;
 
 
 class CurrencyConvertController extends AbstractController
 {   
     private $currencyConvertService;
+    private $guestService;
     
-    public function __construct(CurrencyConvertService $currencyConvertService) {
+    public function __construct(
+        CurrencyConvertService $currencyConvertService, 
+        GuestService $guestService
+    ) {
         $this->currencyConvertService = $currencyConvertService;
+        $this->guestService = $guestService;
     }
 
     #[Route('/currencies', name: 'app_currencies')]
@@ -31,8 +38,13 @@ class CurrencyConvertController extends AbstractController
     public function convert(Request $request): JsonResponse
     {   
         $currencyConvertRequestDto = new CurrencyConvertRequestDto($request);
+        $guestIdRequestDto = new GuestIdRequestDto($request);
+
+        $this->guestService->trackGuest($guestIdRequestDto);
+
         $convertResponse = $this->currencyConvertService->getConvert($currencyConvertRequestDto);
-     
+
+        
         return $this->json(['result' => $convertResponse->result]);
     }
 }

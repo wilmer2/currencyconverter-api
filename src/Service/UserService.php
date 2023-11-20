@@ -10,23 +10,26 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Exception\ValidationException;
-
-
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserService {
     private $em;
     private $passwordHasher;
     private $validator;
+    private $tokenStorage;
 
     public function __construct(
         EntityManagerInterface $em, 
         UserPasswordHasherInterface $passwordHasher,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        TokenStorageInterface $tokenStorage 
     )
     {
         $this->em = $em;
         $this->passwordHasher = $passwordHasher;
         $this->validator = $validator;
+
+        $this->tokenStorage = $tokenStorage;
     }
 
     private function handleValidationError($user)
@@ -58,5 +61,10 @@ class UserService {
         $this->em->flush();   
     }
 
+    public function getCurrentUser()
+    {   
+        $token = $this->tokenStorage->getToken();
 
+        return $token ? $token->getUser() : null;
+    }
 }

@@ -6,11 +6,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class GuestIdRequestDto {
-    private string $guestId;
+    private $guestId;
     
-    public function __construct(Request $request) {
+    public function __construct(Request $request, $loggedInUser) {
         $this->setGuestId($request->headers->get('X-Guest-ID'));
-        $this->validateData();
+
+        if (!$loggedInUser) {
+            $this->validateData();
+        }
     }
 
     private function validateData()

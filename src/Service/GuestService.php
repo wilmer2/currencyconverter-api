@@ -8,13 +8,15 @@ use App\Entity\Guest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Doctrine\ORM\EntityManagerInterface;
 
-
 class GuestService {
     private $guestRepository;
     private $em;
     private const REQUEST_LIMIT = 5;
 
-    public function __construct(GuestRepository $guestRepository, EntityManagerInterface $em)
+    public function __construct(
+        GuestRepository $guestRepository, 
+        EntityManagerInterface $em
+    )
     {
         $this->guestRepository = $guestRepository;
         $this->em = $em;
@@ -30,8 +32,10 @@ class GuestService {
         $this->em->flush();
     }
 
-    public function trackGuest(GuestIdRequestDto $guestIdRequestDto)
-    {
+    public function trackGuest(GuestIdRequestDto $guestIdRequestDto, $user)
+    {   
+        if ($user) return;
+        
         $guestId = $guestIdRequestDto->getGuestId();
         $guest = $this->guestRepository->findOneBy(['guestId' => $guestId]);
 

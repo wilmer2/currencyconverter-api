@@ -49,6 +49,10 @@ class CurrencyConvertController extends AbstractController
 
         $convertResponse = $this->currencyConvertService->getConvert($currencyConvertRequestDto);
 
-        return $this->json(['result' => $convertResponse->result]);
+        return $this->json([
+            'result' => $convertResponse->result,
+            'query' => $convertResponse->query,
+            'quote' => $convertResponse->info->quote
+        ]);
     }
 }

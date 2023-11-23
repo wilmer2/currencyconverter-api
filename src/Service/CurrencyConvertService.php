@@ -40,12 +40,12 @@ class CurrencyConvertService
         return $currencyResponseDto;
     }
 
-    public function getConvert(CurrencyConvertRequestDto $currencyConertRequestDto)
+    public function getConvert(CurrencyConvertRequestDto $currencyConvertRequestDto)
     {
         $response = $this->client->getConvert(
-            $currencyConertRequestDto->getTo(),
-            $currencyConertRequestDto->getFrom(),
-            $currencyConertRequestDto->getAmount(),
+            $currencyConvertRequestDto->getFrom(),
+            $currencyConvertRequestDto->getTo(),
+            $currencyConvertRequestDto->getAmount(),
         );
 
         $jsonResponse = json_decode($response);

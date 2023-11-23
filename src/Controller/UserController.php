@@ -19,7 +19,7 @@ class UserController extends AbstractController
         $this->userService = $userService;
     }
     
-    #[Route('/register', name: 'app_user_register')]
+    #[Route('api/register', name: 'app_user_register')]
     public function registerUser(Request $request): JsonResponse
     {
         $userCreateDto = new UserCreateDto($request);

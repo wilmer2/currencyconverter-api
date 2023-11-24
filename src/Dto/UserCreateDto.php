@@ -12,8 +12,10 @@ class UserCreateDto {
 
     public function __construct(Request $request)
     {
-        $this->setEmail($request->get('email'));
-        $this->setPassword($request->get('password'));
+        $payload = json_decode($request->getContent(), false);
+
+        $this->setEmail($payload->email);
+        $this->setPassword($payload->password);
         $this->validateData();
     }
 

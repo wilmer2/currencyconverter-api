@@ -34,4 +34,11 @@ class UserController extends AbstractController
         
         return $this->json(['message' => 'User created']);
     }
+
+    #[Route('api/current/user', name: 'app_user_logged')]
+    public function getCurrentUser(Request $request): JsonResponse
+    {
+
+        return $this->json(['user' => $this->userService->getCurrentUser()]);
+    }
 }

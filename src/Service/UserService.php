@@ -42,20 +42,20 @@ class UserService {
     }
 
     public function createUser(UserCreateDto $userCreateDto)
-    {   
+    {
         $user = new User();
         $email = $userCreateDto->getEmail();
         $plainTextPassword = $userCreateDto->getPassword();
+        $user->setEmail($email);
+        $user->setPassword($plainTextPassword);
+        $this->handleValidationError($user);
 
         $password = $this->passwordHasher->hashPassword(
-            $user,
-            $plainTextPassword
+          $user,
+          $plainTextPassword
         );
 
-        $user->setEmail($email);
         $user->setPassword($password);
-
-        $this->handleValidationError($user);
 
         $this->em->persist($user);
         $this->em->flush();   

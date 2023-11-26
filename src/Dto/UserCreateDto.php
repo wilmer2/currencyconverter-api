@@ -14,28 +14,17 @@ class UserCreateDto {
     {
         $payload = json_decode($request->getContent(), false);
 
-        $this->setEmail($payload->email);
-        $this->setPassword($payload->password);
-        $this->validateData();
-    }
-
-    private function validateData()
-    {
-        if (empty($this->email) || !filter_var($this->email, FILTER_VALIDATE_EMAIL) ) {
-            throw new HttpException(400, 'email is required and must be a valid value');
-
+        if ($payload === null) {
+            throw new HttpException(400, 'Invalid JSON payload');
         }
 
-        if (empty($this->password) || strlen($this->password) < 8|| !is_string($this->password) ) {
-            throw new HttpException(400, 'password is required and must be at least 8 characters long');
-        }
+        $this->setEmail(isset($payload->email) ? $payload->email : null);
+        $this->setPassword(isset($payload->password) ? $payload->password : null);
     }
-
-
 
     public function setEmail($value)
     {
-        $this->email = trim($value);
+        $this->email = $value ? trim($value) : '';
     }
 
     public function getEmail()
@@ -50,6 +39,6 @@ class UserCreateDto {
 
     public function setPassword($value)
     {
-        $this->password = $value;
+        $this->password = $value ?? '';
     }
 }

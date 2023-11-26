@@ -1,0 +1,8 @@
+# translations/validators/validators.es.yaml
+user:
+  email:
+    required: "El correo es obligatorio"
+    unique: "El correo ya esta siendo usado por otro usuario."
+    email: "El correo debe tener un formato valido."
+  password:
+    min: "La contraseña debe tener un minimo de {{ limit }} caracteres."

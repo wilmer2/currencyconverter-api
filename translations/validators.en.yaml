@@ -1,4 +1,8 @@
 # translations/validators/validators.en.yaml
+lexik_jwt_authentication:
+  invalid_credentials: "Invalid credentials."
+  expired_token: "Token expired"
+
 user:
   email:
     required: "The email is Required"

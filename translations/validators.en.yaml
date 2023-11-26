@@ -1,8 +1,8 @@
 # translations/validators/validators.en.yaml
 user:
   email:
-    required: "Email is Required"
-    unique: "Email has already been used by another user."
+    required: "The email is Required"
+    unique: "The email has already been used by another user."
     email: "The email must have a valid format."
   password:
     min: "The password must be at least {{ limit }} characters."

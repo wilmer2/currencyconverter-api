@@ -1,0 +1,4 @@
+guest:
+  request:
+    header: 'X-Guest-ID es obligatorio'
+    limit_exceeded: 'Se ha excedido el límite de solicitudes de invitados. Por favor, considere registrarse para obtener acceso continuo.'

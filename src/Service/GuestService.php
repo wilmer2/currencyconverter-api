@@ -7,19 +7,29 @@ use App\Repository\GuestRepository;
 use App\Entity\Guest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Adapter\TranslateAdapter;
+
 
 class GuestService {
-    private $guestRepository;
     private $em;
+    private $guestRepository;
+    private $userService;
+
+    private $translate;
+
     private const REQUEST_LIMIT = 5;
 
     public function __construct(
-        GuestRepository $guestRepository, 
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        GuestRepository $guestRepository,
+        UserService $userService,
+        TranslateAdapter $translate
     )
     {
-        $this->guestRepository = $guestRepository;
         $this->em = $em;
+        $this->guestRepository = $guestRepository;
+        $this->userService = $userService;
+        $this->translate = $translate;
     }
 
     private function createGuest($guestId)
@@ -32,11 +42,21 @@ class GuestService {
         $this->em->flush();
     }
 
-    public function trackGuest(GuestIdRequestDto $guestIdRequestDto, $user)
-    {   
+    public function trackGuest(GuestIdRequestDto $guestIdRequestDto)
+    {
+        $user = $this->userService->getCurrentUser();
+
         if ($user) return;
-        
+
         $guestId = $guestIdRequestDto->getGuestId();
+
+        if (!$guestId) {
+            throw new HttpException(
+                400,
+                $this->translate->translateException('guest.request.header')
+            );
+        }
+
         $guest = $this->guestRepository->findOneBy(['guestId' => $guestId]);
 
         if (!$guest) {
@@ -54,7 +74,7 @@ class GuestService {
         if ($count >= self::REQUEST_LIMIT) {
             throw new HttpException(
                 429,
-                'Guest request limit exceeded. Please consider registering for continued access.'
+                $this->translate->translateException('guest.request.limit_exceeded')
             );
         }
     }

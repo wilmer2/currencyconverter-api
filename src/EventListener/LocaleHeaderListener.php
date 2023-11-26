@@ -11,11 +11,11 @@ class LocaleHeaderListener
         $request = $event->getRequest();
 
         // Check if locale is provided in the request
-        $locale =  $request->headers->get('accept-language');
+        $locale =  $request->headers->get('Accept-Language');
 
         if ($locale) {
             // Set the locale if provided
-            $request->setLocale('es');
+            $request->setLocale($locale);
         }
     }
 

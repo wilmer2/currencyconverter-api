@@ -10,23 +10,20 @@ use App\Service\CurrencyConvertService;
 use App\Dto\CurrencyConvertRequestDto;
 use App\Dto\GuestIdRequestDto;
 use App\Service\GuestService;
-use App\Service\UserService;
 
 
 class CurrencyConvertController extends AbstractController
 {   
     private $currencyConvertService;
     private $guestService;
-    private $userService;
+
 
     public function __construct(
         CurrencyConvertService $currencyConvertService, 
         GuestService $guestService,
-        UserService $userService 
     ) {
         $this->currencyConvertService = $currencyConvertService;
         $this->guestService = $guestService;
-        $this->userService = $userService;
     }
 
     #[Route('api/currencies', name: 'app_currencies')]
@@ -40,12 +37,11 @@ class CurrencyConvertController extends AbstractController
 
     #[Route('api/currencies/convert', name: 'app_currencies_convert')]
     public function convert(Request $request): JsonResponse
-    {   
-        $user = $this->userService->getCurrentUser();
+    {
         $currencyConvertRequestDto = new CurrencyConvertRequestDto($request);
-        $guestIdRequestDto = new GuestIdRequestDto($request, $user);
+        $guestIdRequestDto = new GuestIdRequestDto($request);
 
-        $this->guestService->trackGuest($guestIdRequestDto, $user);
+        $this->guestService->trackGuest($guestIdRequestDto);
 
         $convertResponse = $this->currencyConvertService->getConvert($currencyConvertRequestDto);
 

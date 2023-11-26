@@ -9,7 +9,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Adapter\TranslateAdapter;
 
-
 class GuestService {
     private $em;
     private $guestRepository;

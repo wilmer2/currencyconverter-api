@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 use App\Adapter\CurrencyConvertAdapter;
 use App\Adapter\SerializeAdapter;
@@ -11,18 +10,25 @@ use App\Dto\CurrencyResponseErrorDto;
 use App\Exception\CurrencyConvertException;
 use App\Dto\CurrencyConvertRequestDto;
 use App\Dto\CurrencyConvertResponseDto;
+use App\Adapter\TranslateAdapter;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 
 class CurrencyConvertService
 {   
     private $client;
     private $serializer;
+    private $translate;
     
-    
-    public function __construct(CurrencyConvertAdapter $client, SerializeAdapter $serializer) 
+    public function __construct(
+        CurrencyConvertAdapter $client,
+        SerializeAdapter $serializer,
+        TranslateAdapter $translate
+    )
     {   
         $this->client = $client;
         $this->serializer = $serializer;
+        $this->translate = $translate;
     }
 
     public function getCurrencyResponse(): CurrencyResponseDto
@@ -51,12 +57,12 @@ class CurrencyConvertService
         $jsonResponse = json_decode($response);
 
         if (!$jsonResponse->success) {
-            $currencyErrorDto = $this->serializer->deserializeJson($response, CurrencyResponseErrorDto::class);
-            throw new CurrencyConvertException($currencyErrorDto);
+            throw new HttpException(
+                400,
+                $this->translate->translateException('currency.limit_time')
+            );
         }
 
-        $convertResponseDto = $this->serializer->deserializeJson($response, CurrencyConvertResponseDto::class);
-
-        return $convertResponseDto;
+        return $this->serializer->deserializeJson($response, CurrencyConvertResponseDto::class);
     }
 }

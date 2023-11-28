@@ -9,7 +9,6 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-/docker-compose.yaml
 /mysql
 
 

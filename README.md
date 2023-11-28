@@ -8,7 +8,7 @@
 ### Ejecutar pasos en orden
 
 1. Clonar repositorio
-2. Ir a carpeta del proyecto `cd currencyconverter_api`
+2. Ir a carpeta del proyecto `cd ./currencyconverter_api`
 3. Levantar base de datos
 
 ```
